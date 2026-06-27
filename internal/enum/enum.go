@@ -107,7 +107,7 @@ func (t TimerType) Info() TimerTypeEntity {
 			EndColor:    Red,
 			Icon:        "☕️",
 			Title:       "LONG BREAK",
-			StartTitle:  "Long break unlocked, you've completed sessions.",
+			StartTitle:  "Long break unlocked. Time to recharge fully.",
 			EndTitle:    "Reset complete. Let's start another pomodoro.",
 		}
 	case Countdown:
@@ -117,7 +117,7 @@ func (t TimerType) Info() TimerTypeEntity {
 			EndColor:    Black,
 			Icon:        "⏱️",
 			Title:       "COUNTDOWN",
-			StartTitle:  "Stopwatch running...",
+			StartTitle:  "Timer running...",
 			EndTitle:    "Times up!",
 		}
 	}
@@ -135,60 +135,3 @@ func (t TimerType) GetDuration(item model.PomodoroEntity) time.Duration {
 	}
 	return time.Duration(0)
 }
-
-// func (tt TimerType) StartColor() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) MiddleColor() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) EndColor() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) Icon() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) Title() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) StartTitle() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }
-// func (tt TimerType) EndTitle() string {
-// 	switch tt {
-// 	case Work:
-// 	case ShortBreak:
-// 	case LongBreak:
-// 	case Countdown:
-// 	}
-// }

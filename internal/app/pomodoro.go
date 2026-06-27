@@ -11,17 +11,11 @@ import (
 	"time"
 )
 
-func _viewLog(cycle int, pomodoro model.PomodoroEntity, log map[enum.TimerType]time.Duration) {
+func _viewLog(numOfSession int, pomodoro model.PomodoroEntity, log map[enum.TimerType]time.Duration) {
 
 	// Title
-	title2 := fmt.Sprintf(
-		"(%s %s, %s %s, %s %s).",
-		enum.Work.GetDuration(pomodoro), enum.Work.Info().Title,
-		enum.ShortBreak.GetDuration(pomodoro), enum.ShortBreak.Info().Title,
-		enum.LongBreak.GetDuration(pomodoro), enum.LongBreak.Info().Title,
-	)
-	pkg.Log(pomodoro.Name+" Focus ", title2, "\n")
-	pkg.Log(enum.Underline, fmt.Sprintf("CYCLE: %d\n", cycle))
+	pkg.Log(pomodoro.TitleWithSessionName(), "\n")
+	pkg.Log(enum.Underline, fmt.Sprintf("Session No:%s %d\n", enum.Raw, numOfSession))
 
 	// Duration Info
 	buildTitle := func(t enum.TimerType, d time.Duration) {
@@ -41,9 +35,12 @@ func _viewLog(cycle int, pomodoro model.PomodoroEntity, log map[enum.TimerType]t
 
 	// Graph
 	totalSecond := int((log[workType] + log[shortBreakType] + log[longBreakType]).Seconds())
-	limit := constant.ProgressBarSize
+
+	size, _ := pkg.TerminalSize()
+	widthSize := max(int(size.Col)-20, 0)
+
 	buildBar := func(t enum.TimerType) {
-		percent := int((float32(log[t].Seconds()) / float32(totalSecond)) * float32(limit))
+		percent := int((float32(log[t].Seconds()) / float32(totalSecond)) * float32(widthSize))
 		color := t.Info().EndColor.Bg()
 		if t == enum.Work {
 			color = t.Info().StartColor.Bg()
@@ -67,7 +64,7 @@ func _viewLog(cycle int, pomodoro model.PomodoroEntity, log map[enum.TimerType]t
 
 func _pomodoro(item model.PomodoroEntity) {
 
-	var cycle int = 0
+	var numOfSession int = 0
 	var focusEnable = true
 	var sessionLog map[enum.TimerType]time.Duration = map[enum.TimerType]time.Duration{
 		enum.Work:       time.Duration(0),
@@ -82,9 +79,9 @@ func _pomodoro(item model.PomodoroEntity) {
 	}
 
 	for focusEnable {
-		cycle++
+		numOfSession++
 		sessions := []enum.TimerType{enum.Work}
-		if cycle%constant.DefaultSession == 0 {
+		if numOfSession%constant.DefaultSession == 0 {
 			sessions = append(sessions, enum.LongBreak)
 		} else {
 			sessions = append(sessions, enum.ShortBreak)
@@ -95,11 +92,15 @@ func _pomodoro(item model.PomodoroEntity) {
 			var duration time.Duration = session.GetDuration(item)
 
 			// Input
-			inputTitle := session.Info().Icon + session.Info().Title + ": " + session.Info().StartTitle
-			confirm := utils.ChooseOption(inputTitle, arr, buildFnc, "End Focus")
+			sessionTitle := fmt.Sprintf(
+				"%s%s/%s%s(%s): %s",
+				item.Icon, item.Name,
+				session.Info().Icon, session.Info().Title, session.GetDuration(item), session.Info().StartTitle,
+			)
+			confirm := utils.ChooseOption(sessionTitle, arr, buildFnc, "End Focus")
 			if confirm == nil {
 				pkg.Log("\n")
-				_viewLog(cycle, item, sessionLog)
+				_viewLog(numOfSession, item, sessionLog)
 				//END Focus
 				focusEnable = false
 				break
@@ -110,10 +111,13 @@ func _pomodoro(item model.PomodoroEntity) {
 				timer.TimerStart(duration, session.Info())
 			} else if *confirm == enum.YesNotify {
 				timer.TimerStart(duration, session.Info())
-				pkg.NotificationWithSound(session.Info().Title+session.Info().Icon, session.Info().EndTitle)
+				err := pkg.NotificationWithSound(session.Info().Title+session.Info().Icon, session.Info().EndTitle)
+				if err != nil {
+					// pkg.LogError(err)
+				}
 			} else if *confirm == enum.ViewLog {
 				i--
-				_viewLog(cycle, item, sessionLog)
+				_viewLog(numOfSession, item, sessionLog)
 				continue
 			}
 			pkg.Log("\n")
@@ -131,13 +135,15 @@ func RunPomodoro() {
 		model.TurboFocus(),
 		// model.Test(),
 	}
+
 	buildFnc := func(e model.PomodoroEntity) string {
-		return e.Name + " Focus: " + e.DurationTitle()
+		return e.Title()
 	}
 
 	for {
 		item := utils.ChooseOption("Which Pomodoro mode would you like to start?", pomodoros, buildFnc, "Exit")
 		if item == nil {
+			pkg.Log(enum.Cyan, constant.DeveloperInfo)
 			break //EXIT
 		}
 		_pomodoro(*item)

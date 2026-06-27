@@ -14,8 +14,10 @@ func ProgressBar(
 	textAnsiColor string,
 ) {
 
-	const limit int = 99
-	var progress int = int(progressPercent * float32(limit))
+	size, _ := pkg.TerminalSize()
+	widthSize := max(int(size.Col)-40, 0)
+
+	var progress int = int(progressPercent * float32(widthSize))
 
 	//* Start
 	pkg.Log("\r[")
@@ -27,7 +29,7 @@ func ProgressBar(
 	}
 
 	//* End
-	pkg.Log(fillAnsiColor, strings.Repeat(" ", limit-progress))
+	pkg.Log(fillAnsiColor, strings.Repeat(" ", widthSize-progress))
 	pkg.Log("]")
 
 	percent := int(progressPercent * 100)

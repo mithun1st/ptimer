@@ -6,58 +6,55 @@ import (
 )
 
 type PomodoroEntity struct {
+	Icon         string
 	Name         string
 	WorkDuration time.Duration
 	ShortBreak   time.Duration
 	LongBreak    time.Duration
 }
 
-func (m PomodoroEntity) DurationTitle() string {
-	return fmt.Sprintf("%.0f/%.0f/%.0f min", m.WorkDuration.Minutes(), m.ShortBreak.Minutes(), m.LongBreak.Minutes())
+func (m PomodoroEntity) Title() string {
+	return fmt.Sprint(m.Icon, " ", m.Name, " Focus: ", m.WorkDuration.Minutes(), "/", m.ShortBreak.Minutes(), "/", m.LongBreak.Minutes(), " min")
+}
+
+func (m PomodoroEntity) TitleWithSessionName() string {
+	return fmt.Sprint(m.Icon, " ", m.Name, " (", m.WorkDuration.Minutes(), "m WORK, ", m.ShortBreak.Minutes(), "m SHORT BREAK, ", m.LongBreak.Minutes(), "m LONG BREAK)")
 }
 
 func QuickFocus() PomodoroEntity {
-	workDuration := time.Minute * 25
-	shortBreak := time.Minute * 5
-	longBreak := time.Minute * 20
 	return PomodoroEntity{
-		Name:         "⚡️ Quick",
-		WorkDuration: workDuration,
-		ShortBreak:   shortBreak,
-		LongBreak:    longBreak,
+		Icon:         "⚡️",
+		Name:         "Quick",
+		WorkDuration: time.Minute * 25,
+		ShortBreak:   time.Minute * 5,
+		LongBreak:    time.Minute * 20,
 	}
 }
 func DeepFocus() PomodoroEntity {
-	workDuration := time.Minute * 50
-	shortBreak := time.Minute * 10
-	longBreak := time.Minute * 25
 	return PomodoroEntity{
-		Name:         "🧠 Deep",
-		WorkDuration: workDuration,
-		ShortBreak:   shortBreak,
-		LongBreak:    longBreak,
+		Icon:         "🧠",
+		Name:         "Deep",
+		WorkDuration: time.Minute * 50,
+		ShortBreak:   time.Minute * 10,
+		LongBreak:    time.Minute * 25,
 	}
 }
 func TurboFocus() PomodoroEntity {
-	workDuration := time.Minute * 90
-	shortBreak := time.Minute * 15
-	longBreak := time.Minute * 30
 	return PomodoroEntity{
-		Name:         "🚀 Turbo",
-		WorkDuration: workDuration,
-		ShortBreak:   shortBreak,
-		LongBreak:    longBreak,
+		Icon:         "🚀",
+		Name:         "Turbo",
+		WorkDuration: time.Minute * 90,
+		ShortBreak:   time.Minute * 15,
+		LongBreak:    time.Minute * 30,
 	}
 }
 
 func Test() PomodoroEntity {
-	workDuration := time.Second * 5
-	shortBreak := time.Second * 2
-	longBreak := time.Second * 3
 	return PomodoroEntity{
-		Name:         "🧪 Test",
-		WorkDuration: workDuration,
-		ShortBreak:   shortBreak,
-		LongBreak:    longBreak,
+		Icon:         "🧪",
+		Name:         "Test",
+		WorkDuration: time.Second * 5,
+		ShortBreak:   time.Second * 2,
+		LongBreak:    time.Second * 3,
 	}
 }

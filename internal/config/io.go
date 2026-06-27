@@ -14,10 +14,10 @@ func InputCountDownTimeByFlag() (*time.Duration, bool, bool) {
 	var enableRandomColor bool
 
 	flag.IntVar(&seconds, "s", 0, "Input time as seconds.")
-	flag.IntVar(&minutes, "m", 0, "Input time as Minutes.")
+	flag.IntVar(&minutes, "m", 0, "Input time as minutes.")
 	flag.IntVar(&hours, "h", 0, "Input time as hours.")
-	flag.BoolVar(&enableNotification, "notify", true, "Notification, Default: true")
-	flag.BoolVar(&enableRandomColor, "color", false, "Color style random, Default: false ")
+	flag.BoolVar(&enableNotification, "notify", true, "Notification toggle by true/false")
+	flag.BoolVar(&enableRandomColor, "color", false, "Random color style by true/false")
 
 	flag.Parse()
 
