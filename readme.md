@@ -53,7 +53,7 @@ Track your productivity with detailed session logs:
 ![view_log](https://raw.githubusercontent.com/mithun1st/ptimer/master/screenshots/view_log.png)
 
 
-### 3. Quick Timer With Flag
+### 4. Quick Timer With Flag
 
 Start timers instantly from the command line with custom durations:
 - `-m` for minutes
